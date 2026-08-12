@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function Produk() {
-    const [produk, setproduk] = useState([]);
+    const [produk, setProduk] = useState([]);
     const [loading, setLoading] = useState(true)
 
     const getProduk = async () => {

@@ -1,6 +1,11 @@
 const express = require('express');
+const cors = require('cors')
 const app = express ();
 const mysql = require ('mysql2');
+const PORT = 3001;
+
+app.use(cors())
+app.use(express.json());
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -16,10 +21,6 @@ db.connect(err => {
         console.log ('Berhasil konek ke database Glowlist');
     }
 });
-const PORT = 3001;
-
-app.use(express.json());
-
 
 app.get('/', (req, res) => {
     res.send('Selamat Datang di Glowlist API sudah berjalan');
@@ -32,6 +33,26 @@ app.get('/produk', (req, res) => {
         res.json(results);
     });
 });
+
+app.post('/produk',(req, res)=> {
+    const { judul, deskripsi, harga, id_kategori } = req.body;
+
+    if(!judul || !harga ){
+        return res.status(400).json({ message: 'Judul dan harga wajib diisi'})
+    }
+     if(!deskripsi ){
+        return res.status(400).json({ message: 'JDeskripsi wajib diisi'})
+    }
+
+    const sql = 'INSERT INTO produk (judul, deskripsi, harga, id_kategori, tgl_input) VALUES (?,?,?,?, NOW())'
+    db.query(sql, [judul, deskripsi, harga, id_kategori], (err,results) => {
+        if (err) return res.status(500).json({ error: err.sqlMessage })
+            res.json ({
+                message: 'Produk berhasil ditambahkan',
+                id_produk: results.insertId
+        })
+    })
+})
 
 app.get('/kategori', (req, res) => {
     const sql = 'SELECT * FROM kategori';
