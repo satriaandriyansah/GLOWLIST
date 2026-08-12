@@ -13,7 +13,7 @@ db.connect(err => {
     if(err){
         console.error('Gagal konek ke database:', err);
     } else {
-        console.log ('Berhahasil konek ke database Glowlist');
+        console.log ('Berhasil konek ke database Glowlist');
     }
 });
 const PORT = 3001;
